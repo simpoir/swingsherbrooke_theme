@@ -1,0 +1,19 @@
+{
+  "name": "swingtastic",
+  "version": "1.0.0",
+  "description": "wordpress theme",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "sass -s compressed sass/style.scss > style.css"
+  },
+  "author": "Simon Poirier",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "^3.3.1"
+  },
+  "devDependencies": {
+    "materialize-css": "^0.100.2",
+    "sass": "^1.0.0-beta.5.2"
+  }
+}
