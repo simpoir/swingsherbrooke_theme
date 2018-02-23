@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "sass -s compressed sass/style.scss > style.css"
+    "install": "sass sass/materialized.scss | cssmin > style.css && cp node_modules/materialize-css/dist/js/materialize.min.js ./js/"
   },
   "author": "Simon Poirier",
   "license": "MIT",
@@ -13,6 +13,7 @@
     "jquery": "^3.3.1"
   },
   "devDependencies": {
+    "cssmin": "^0.4.3",
     "materialize-css": "^0.100.2",
     "sass": "^1.0.0-beta.5.2"
   }

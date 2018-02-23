@@ -14,43 +14,44 @@
 <html <?php language_attributes(); ?>>
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="profile" href="http://gmpg.org/xfn/11">
 
+	<link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+	<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
 	<?php wp_head(); ?>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body <?php body_class(); ?>>
 <div id="page" class="site">
-	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'swingsherbrooke' ); ?></a>
-
 	<header id="masthead" class="site-header">
-		<div class="site-branding">
-			<?php
-			the_custom_logo();
-			if ( is_front_page() && is_home() ) : ?>
-				<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-			<?php else : ?>
-				<p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p>
-			<?php
-			endif;
+		<nav>
+			<div class="nav-wrapper">
+				<?php
+				the_custom_logo();
+				?>
+				<a href="#" data-activates="mobile-primary-menu" class="button-collapse"><i class="material-icons">menu</i></a>
 
-			$description = get_bloginfo( 'description', 'display' );
-			if ( $description || is_customize_preview() ) : ?>
-				<p class="site-description"><?php echo $description; /* WPCS: xss ok. */ ?></p>
-			<?php
-			endif; ?>
-		</div><!-- .site-branding -->
-
-		<nav id="site-navigation" class="main-navigation">
-			<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Primary Menu', 'swingsherbrooke' ); ?></button>
-			<?php
-				wp_nav_menu( array(
-					'theme_location' => 'menu-1',
-					'menu_id'        => 'primary-menu',
-				) );
-			?>
-		</nav><!-- #site-navigation -->
+				<?php
+					wp_nav_menu( array(
+						'theme_location' => 'menu-1',
+						'menu_id'        => 'primary-menu',
+						'container'      => nil,
+						'menu_class'     => 'right hide-on-med-and-down',
+					) );
+					wp_nav_menu( array(
+						'theme_location' => 'menu-1',
+						'menu_id'        => 'mobile-primary-menu',
+						'container'      => nil,
+						'menu_class'     => 'side-nav collapsible',
+					) );
+				?>
+			</div><!-- .nav-wrapper -->
+		</nav>
+		<script>$(function(){
+			$(".button-collapse").sideNav();
+			$(".dropdown-button").dropdown();
+		})</script>
 	</header><!-- #masthead -->
 
 	<div id="content" class="site-content">
