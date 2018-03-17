@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Swing Sherbrooke</title>
+
+		<link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="style.css" >
+		<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script src="js/materialize.min.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body>
+
+		<!-- top bar -->
+		<nav id="main-nav">
+			<div class="nav-wrapper container">
+				<a href="#!" class="brand-logo"><img src="mock/logo.png"></a>
+				<a href="#" data-activates="mobile-nav" class="button-collapse">
+					<i class="material-icons">menu</i>
+				</a>
+				<!-- desktop nav -->
+				<ul id="top-nav" class="right hide-on-med-and-down">
+					<li><a href="#one">one</a></li>
+					<li>
+						<a href="#two" class="dropdown-button" data-activates="nav-2-drop" data-belowOrigin="true" data-hover="true"><i class="right material-icons">arrow_drop_down</i>two</a>
+						<div id="nav-2-drop" class="dropdown-content">
+							<ul>
+								<li><a href="#subtwo">sub two</a></li>
+								<li><a href="#subtwo">sub three</a></li>
+							</ul>
+						</div>
+					</li>
+					<li><a href="#three">three</a></li>
+				</ul>
+
+				<!-- mobile nav -->
+				<ul class="side-nav" id="mobile-nav">
+					<li><div class="user-view"><a href="#!">Logo</a></div></li>
+					<li>
+						<ul class="collapsible">
+							<li><a class="collapsible-header" href="#one">one</a></li>
+							<li>
+								<a class="collapsible-header" href="#two"><i class="right material-icons">arrow_drop_down</i>two</a>
+								<div class="collapsible-body">
+									<ul>
+										<li><a href="#subtwo">sub two</a></li>
+										<li><a href="#subtwo">sub two</a></li>
+										<li><a href="#subtwo">sub two</a></li>
+										<li><a href="#subtwo">sub two</a></li>
+										<li><a href="#subtwo">sub two</a></li>
+										<li><a href="#subtwo">sub two</a></li>
+									</ul>
+								</div>
+							</li>
+							<li><a class="collapsible-header" href="#three">three</a></li>
+						</ul>
+					</li>
+				</div>
+			</div>
+		</nav>
+		<script>$(function(){
+			$(".button-collapse").sideNav();
+			$(".collapsible").collapsible();
+		})</script>
+
+		<div id="central-container" class="container">
+			<div class="row">
+				<div id="col-main" class="col s12 m12 l6">
+					<!--TODO main-->
+					<img style="width: 100%" src="mock/horaire.png">
+				</div>
+
+				<div id="col-events" class="col s12 m6 l3">
+					<h4>Nos activités</h2>
+					<h5>Ce mardi</h3>
+					<!-- TODO next tuesday -->
+					<div class="divider"></div>
+					<h5>Événements à venir</h3>
+					<!-- TODO next event -->
+					<div class="divider"></div>
+					<h5>Calendrier</h3>
+					<!-- TODO generate cal -->
+				</div>
+
+				<div id="col-events" class="col s12 m6 l3">
+					<h4>Suivez-nous</h4>
+					<div>
+						<!-- TODO Last post-->
+					</div>
+				</div>
+			</div>
+			<div>
+				<h4>Les styles de danse swing</h2>
+				<div class="horiz-scroller center-align">
+					<div class="box-link">Style</div>
+					<div class="box-link">Style1</div>
+					<div class="box-link">Style2</div>
+					<div class="box-link">Style3</div>
+					<div class="box-link">Style4</div>
+					<div class="box-link">Style5</div>
+					<div class="box-link">Style6</div>
+					<div class="box-link">Style7</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
