@@ -1,6 +1,8 @@
 $primary-color: white;
 $secondary-color: black;
 $navbar-font-color: black;
+$roboto-font-path: "fonts/roboto/";
+$styles-thumbnails-count: 3;
 
 
 @import "../node_modules/materialize-css/sass/materialize.scss";
@@ -74,7 +76,12 @@ div.horiz-scroller {
         border: 1px black solid;
         display: inline-block;
         background-size: 100%;
-        background-image: url("mock/style.png");
+        background-image: url("img/style1.png");
+    }
+    @for $i from 1 to 12 {
+        .box-link.item#{$i} {
+            background-image: url("img/style#{($i % 3) + 1}.png");
+        }
     }
 
     .style-name {
@@ -92,9 +99,15 @@ div.horiz-scroller {
 
 h4 {
     color: #cd171e;
+    font-size: 1.8rem;
     text-transform: uppercase;
 }
 
 h5 {
+    color: #000;
     text-transform: uppercase;
+    font-size: 1.6rem;
+    border-top: solid 2px #000;
+    border-bottom: solid 1px #000;
+    padding-top: 0.2em;
 }

@@ -24,7 +24,10 @@
 				<ul id="top-nav" class="right hide-on-med-and-down">
 					<li><a href="#one">one</a></li>
 					<li>
-						<a href="#two" class="dropdown-button" data-activates="nav-2-drop" data-belowOrigin="true" data-hover="true"><i class="right material-icons">arrow_drop_down</i>two</a>
+						<a href="#two" class="dropdown-button"
+							data-activates="nav-2-drop" data-belowOrigin="true"
+							data-hover="true"><i class="right
+								material-icons">arrow_drop_down</i>two</a>
 						<div id="nav-2-drop" class="dropdown-content">
 							<ul>
 								<li><a href="#subtwo">sub two</a></li>
@@ -62,50 +65,49 @@
 		</nav>
 		<script>$(function(){
 			$(".button-collapse").sideNav();
-			$(".collapsible").collapsible();
 		})</script>
 
-		<div id="central-container" class="container">
-			<div class="row">
-				<div id="col-main" class="col s12 m12 l6">
-					<!--TODO load main-->
-					<h4>Horaire des cours</h4>
-					<img style="width: 100%" src="mock/horaire.png">
-				</div>
-
-				<div id="col-events" class="col s12 m6 l3">
-					<h4>Nos activités</h2>
-					<h5>Ce mardi</h3>
-					<!-- TODO next tuesday -->
-					<div class="divider"></div>
-					<h5>Événements à venir</h3>
-					<!-- TODO next event -->
-					<div class="divider"></div>
-					<h5>Calendrier mensuel</h3>
-					<!-- TODO generate cal -->
-				</div>
-
-				<div id="col-events" class="col s12 m6 l3">
-					<h4>Suivez-nous</h4>
-					<div>
-						<!-- TODO Last post-->
-					</div>
-				</div>
+	<div id="central-container" class="container">
+		<div class="row">
+			<div id="col-main" class="col s12 m12 l6">
+				<!--TODO load main-->
+				<h4>Horaire des cours</h4>
+				<img style="width: 100%" src="mock/horaire.png">
 			</div>
-			<div>
-				<h4>Les styles de danse swing</h2>
-				<div class="horiz-scroller center-align">
-					<div class="box-link"><span class="style-name">Lindy hop</span></div>
-					<div class="box-link"><span class="style-name">Rockabilly jive</span></div>
-					<div class="box-link"><span class="style-name">West coast swing</span></div>
-					<div class="box-link"><span class="style-name">Jazz steps solo</span></div>
-					<div class="box-link"><span class="style-name">Charleston</span></div>
-					<div class="box-link"><span class="style-name">blues</span></div>
-					<div class="box-link"><span class="style-name">balboa</span></div>
-					<div class="box-link"><span class="style-name">collegiate shag</span></div>
+
+			<div id="col-events" class="col s12 m6 l3">
+				<h4>Nos activités</h2>
+				<h5>Ce mardi</h3>
+				<!-- TODO next tuesday -->
+				<div class="divider"></div>
+				<h5>Événements à venir</h3>
+				<!-- TODO next event -->
+				<div class="divider"></div>
+				<h5>Calendrier mensuel</h3>
+				<!-- TODO generate cal -->
+			</div>
+
+			<div id="col-events" class="col s12 m6 l3">
+				<h4>Suivez-nous</h4>
+				<div>
+					<!-- TODO Last post-->
 				</div>
 			</div>
 		</div>
-	</body>
+		<div>
+			<h4>Les styles de danse swing</h2>
+			<div class="horiz-scroller center-align">
+				<div class="box-link item1"><span class="style-name">Lindy hop</span></div>
+				<div class="box-link item2"><span class="style-name">Rockabilly jive</span></div>
+				<div class="box-link item3"><span class="style-name">West coast swing</span></div>
+				<div class="box-link item4"><span class="style-name">Jazz steps solo</span></div>
+				<div class="box-link item5"><span class="style-name">Charleston</span></div>
+				<div class="box-link item6"><span class="style-name">blues</span></div>
+				<div class="box-link item7"><span class="style-name">balboa</span></div>
+				<div class="box-link item8"><span class="style-name">collegiate shag</span></div>
+			</div>
+		</div>
+	</div>
+</body>
 
 </html>
