@@ -122,14 +122,16 @@ function swingsherbrooke_scripts() {
 
 	wp_enqueue_script( 'swingsherbrooke-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '20151215', true );
 	wp_enqueue_script( 'swingsherbrooke-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20151215', true );
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
-		wp_enqueue_script( 'comment-reply' );
-	}
 
 	//wp_enqueue_script('jquery', "//code.jquery.com/jquery-3.2.1.min.js");
 	wp_enqueue_script('materialize-js', get_template_directory_uri() . "/js/materialize.min.js");
 }
 add_action( 'wp_enqueue_scripts', 'swingsherbrooke_scripts' );
+
+/**
+ * Side menu walkers are here.
+ */
+require get_template_directory() . '/inc/menu-walkers.php';
 
 /**
  * Implement the Custom Header feature.
@@ -164,3 +166,132 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 if ( class_exists( 'WooCommerce' ) ) {
 	require get_template_directory() . '/inc/woocommerce.php';
 }
+
+
+/* settings */
+function add_theme_menu_item() {
+	add_menu_page("Options du thème", "Options du thème", "manage_options", "theme-panel", "theme_settings_page", null, 99);
+}
+
+add_action("admin_menu", "add_theme_menu_item");
+
+function theme_settings_page() {
+?>
+	<div class="wrap">
+	<h1>Theme Panel</h1>
+	<form method="post" action="options.php">
+<?php
+	settings_fields("section");
+	do_settings_sections("theme-options");
+	submit_button(); 
+?>
+	</form>
+	</div>
+<?php
+}
+
+function display_facebook_element() {
+?>
+	<div>Permet de faire des requêtes à la page facebook depuis le thème. Voir la documentation du <a href="https://developers.facebook.com/tools/explorer/356293074798347">graph API</a></div>
+	<input type="text" name="facebook_app_token" id="facebook_app_token" value="<?php echo get_option('facebook_app_token'); ?>" />
+<?php
+}
+
+function display_theme_panel_fields() {
+	add_settings_section("section", "All Settings", null, "theme-options");
+
+	add_settings_field("facebook_app_token", "Facebook app token (suitable for graph api queries)", "display_facebook_element", "theme-options", "section");
+
+	register_setting("section", "facebook_app_token");
+}
+
+add_action("admin_init", "display_theme_panel_fields");
+
+
+
+/* custom rendering components */
+function render_last_social_post() {
+	$graph_url = 'https://graph.facebook.com/v2.12/swingsherbrooke/posts?fields=full_picture%2Ccreated_time%2Cmessage%2Clink%2Cupdated_time&limit=1&access_token='. get_option('facebook_app_token');
+	$events = json_decode(file_get_contents($graph_url), true);
+	foreach ($events["data"] as $event) {
+
+		echo '<a href="'. esc_url($event["link"]) .'"><div class="card">';
+		echo '<div class="card-content">'. esc_html($event["message"]) .'</div>';
+		echo '<div class="card-image"><img src="'. esc_url($event["full_picture"]) .'"></div>';
+		echo '</div></a>';
+
+		// limited to 1, so max 1 elem, but break anyway
+		break;
+	}
+}
+
+function render_social_events() {
+	$now = new DateTime();
+	$graph_url = 'https://graph.facebook.com/v2.12/swingsherbrooke/events?fields=name,start_time,description,cover&limit=3&access_token='. get_option('facebook_app_token');
+	$events = json_decode(file_get_contents($graph_url), true);
+
+	$evt_count = 0;
+	foreach ($events["data"] as $event) {
+		$evt_count++;
+		$d = new DateTime($event["start_time"]);
+
+		echo '<div class="card">';
+		echo '<div class="card-image"><img src="'. esc_url($event["cover"]["source"]) .'"></div>';
+
+
+		echo '<div class="card-content">';
+		echo '<span class="card-title activator">'.strftime("%Y-%b-%d", $d->getTimestamp());
+		echo '<i class="material-icons right">more_vert</i>';
+		echo '<br>'.esc_html($event["name"]).'</span>';
+		echo '</div><div class="card-reveal">';
+		echo '<span class="card-title">'.strftime("%Y-%b-%d", $d->getTimestamp());
+		echo '<i class="material-icons right">close</i>';
+		echo '<br>'.esc_html($event["name"]).'</span>';
+		echo esc_html($event["description"]);
+		echo '</div>';
+		echo '</div>';
+
+		if ($now < $d && $evt_count==1) {
+			// display at most 1 past event if nothing else
+			break;
+		}
+	}
+}
+
+function render_calendar() {
+	$days_in_month = date('t');
+	$month = date_create(date("Y-m-01"));
+	$dow_offset = date_format($month, "w");
+	$dow = 0;
+?>
+	<table class="simple-calendar">
+		<thead>
+		<tr>
+		<th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+<?php
+	for ($i=0; $i<$dow_offset; $i++) {
+		echo '<td></td>';
+		$dow++;
+	}
+	for ($i=1; $i<=$days_in_month; $i++) {
+		if ($i == date('j')) {
+			echo '<td><b>'. $i .'</b></td>';
+		} else {
+			echo '<td>'. $i .'</td>';
+		}
+		$dow++;
+		if ($dow % 7 == 0) {
+			echo '</tr><tr>';
+		}
+	}
+?>
+		</tr>
+		</tbody>
+	</table>
+<?php
+}
+

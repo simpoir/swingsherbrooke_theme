@@ -30,8 +30,8 @@ $styles-thumbnails-count: 3;
     }
 }
 
-/* container is 70 85 90 per media; might want to scale that up
- * for screen as 70 is slightly floaty. */
+/** container is 70 85 90 per media; might want to scale that up
+  * for screen as 70 is slightly floaty. */
 
 .side-nav {
     // fix for scroll fix broken on overflow on not-chrome
@@ -111,3 +111,22 @@ h5 {
     border-bottom: solid 1px #000;
     padding-top: 0.2em;
 }
+
+#col-main {
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+.site-footer .site-info {
+    color: lightgrey;
+}
+
+.simple-calendar {
+    .th, td {
+        padding: 0;
+        text-align: center;
+    }
+}
+// vim: set sw=4 et :

@@ -25,33 +25,46 @@
 <body <?php body_class(); ?>>
 <div id="page" class="site">
 	<header id="masthead" class="site-header">
-		<nav>
-			<div class="nav-wrapper">
-				<?php
-				the_custom_logo();
-				?>
-				<a href="#" data-activates="mobile-primary-menu" class="button-collapse"><i class="material-icons">menu</i></a>
 
+		<nav id="main-nav">
+			<div class="nav-wrapper container">
+				<a href="<?php echo(get_bloginfo('url')); ?>" class="brand-logo"><img src="<?php echo(get_header_image()); ?>" alt="<?php echo(get_bloginfo('title')); ?>"></a>
+				<a href="#" data-activates="mobile-nav" class="button-collapse">
+					<i class="material-icons">menu</i>
+				</a>
 				<?php
+					// desktop navigation
 					wp_nav_menu( array(
-						'theme_location' => 'menu-1',
-						'menu_id'        => 'primary-menu',
-						'container'      => nil,
-						'menu_class'     => 'right hide-on-med-and-down',
-					) );
-					wp_nav_menu( array(
-						'theme_location' => 'menu-1',
-						'menu_id'        => 'mobile-primary-menu',
-						'container'      => nil,
-						'menu_class'     => 'side-nav collapsible',
+						'theme_location'  => 'menu-1',
+						'container'       => 'ul',
+						'walker'          => new NavMenuWalker(),
+						'menu_class'      => 'right hide-on-med-and-down',
+						'menu_id'         => 'top-nav',
 					) );
 				?>
-			</div><!-- .nav-wrapper -->
+
+				<ul class="side-nav" id="mobile-nav">
+					<li><div class="user-view"><a href="#!">Logo</a></div></li>
+					<li>
+						<?php
+							// mobile navigation
+							wp_nav_menu( array(
+								'theme_location'  => 'menu-1',
+								'container'       => 'ul',
+								'walker'          => new MobileNavPanelWalker(),
+								'menu_class'      => 'collapsible',
+							) );
+						?>
+					</li>
+				</ul>
+
+			</div>
 		</nav>
 		<script>$(function(){
 			$(".button-collapse").sideNav();
-			$(".dropdown-button").dropdown();
 		})</script>
+
 	</header><!-- #masthead -->
 
 	<div id="content" class="site-content">
+
