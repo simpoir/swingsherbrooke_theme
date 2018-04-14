@@ -211,6 +211,7 @@ add_action("admin_init", "display_theme_panel_fields");
 
 /* custom rendering components */
 function render_last_social_post() {
+	setlocale(LC_ALL, "fr_CA.utf-8");
 	$graph_url = 'https://graph.facebook.com/v2.12/swingsherbrooke/posts?fields=full_picture%2Ccreated_time%2Cmessage%2Clink%2Cupdated_time&limit=1&access_token='. get_option('facebook_app_token');
 	$events = json_decode(file_get_contents($graph_url), true);
 	foreach ($events["data"] as $event) {
@@ -226,6 +227,7 @@ function render_last_social_post() {
 }
 
 function render_social_events() {
+	setlocale(LC_ALL, "fr_CA.utf-8");
 	$now = new DateTime();
 	$graph_url = 'https://graph.facebook.com/v2.12/swingsherbrooke/events?fields=name,start_time,description,cover&limit=3&access_token='. get_option('facebook_app_token');
 	$events = json_decode(file_get_contents($graph_url), true);
@@ -240,8 +242,8 @@ function render_social_events() {
 
 
 		echo '<div class="card-content">';
-		echo '<span class="card-title activator">'.strftime("%Y-%b-%d", $d->getTimestamp());
-		echo '<i class="material-icons right">more_vert</i>';
+		echo '<span class="card-title activator"><b>'.strftime("%d %b %Y", $d->getTimestamp());
+		echo '</b><i class="material-icons right">more_vert</i>';
 		echo '<br>'.esc_html($event["name"]).'</span>';
 		echo '</div><div class="card-reveal">';
 		echo '<span class="card-title">'.strftime("%Y-%b-%d", $d->getTimestamp());

@@ -15,24 +15,31 @@ get_header(); ?>
 
 		<div id="col-events" class="col s12 m6 l3">
 			<h4>Nos activités</h2>
-			<h5>Événements à venir</h3>
+			<h5>Ce mardi au boq</h5>
+			<div class="center-align">
+<img style="width: 100%" src="http://wp.lxd/wp-content/uploads/2018/04/saveur-wcs.png">
+			</div>
+
+			<h5>Événements à venir</h5>
 				<?php
 					render_social_events();
 				?>
+
+<div class="social-links">
+				<a href="https://facebook.com/swingsherbrooke/events"
+class="btn wave-effect wave-light" style="width: 100%; vertical-align: middle;"><i class="material-icons">event</i>Calendrier</a>
+</div>
 		</div>
 
 		<div id="col-events" class="col s12 m6 l3">
-			<h4>Suivez-nous <img src="<?php echo (get_template_directory_uri()); ?>/img/fb_marker.png"></h4>
-			<div>
-				<?php
-					render_last_social_post();
-				?>
+			<h4>Suivez-nous</h4>
+			<div class="social-links">
+<div><i class="material-icons">email</i>Infolettre</div>
+<hr>
+<div>Facebook</div>
+<hr>
+<div>Instagram</div>
 			</div>
-
-			<h5>Calendrier mensuel</h3>
-				<?php
-					render_calendar();
-				?>
 		</div>
 	</div>
 	<div>
