@@ -102,13 +102,22 @@ add_action( 'after_setup_theme', 'swingsherbrooke_content_width', 0 );
  */
 function swingsherbrooke_widgets_init() {
 	register_sidebar( array(
-		'name'          => esc_html__( 'Sidebar', 'swingsherbrooke' ),
-		'id'            => 'sidebar-1',
+		'name'          => esc_html__( 'Colonne 1', 'swingsherbrooke' ),
+		'id'            => 'home-col-1',
 		'description'   => esc_html__( 'Add widgets here.', 'swingsherbrooke' ),
 		'before_widget' => '<section id="%1$s" class="widget %2$s">',
 		'after_widget'  => '</section>',
-		'before_title'  => '<h2 class="widget-title">',
-		'after_title'   => '</h2>',
+		'before_title'  => '<h5 class="widget-title">',
+		'after_title'   => '</h5>',
+	) );
+	register_sidebar( array(
+		'name'          => esc_html__( 'Colonne 2', 'swingsherbrooke' ),
+		'id'            => 'home-col-2',
+		'description'   => esc_html__( 'Add widgets here.', 'swingsherbrooke' ),
+		'before_widget' => '<section id="%1$s" class="widget %2$s">',
+		'after_widget'  => '</section>',
+		'before_title'  => '<h5 class="widget-title">',
+		'after_title'   => '</h5>',
 	) );
 }
 add_action( 'widgets_init', 'swingsherbrooke_widgets_init' );

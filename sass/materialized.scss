@@ -145,17 +145,45 @@ h5 {
     }
 }
 
-.social-links {
+div#col-events, div#col-social {
+    li.menu-item a {
+        @extend .btn;
 
-    div {
-        color: white !important;
-        //background-color: white;
-        vertical-align: middle;
+        width: 100%;
+        margin: 0.5em 0;
+
+        &:hover {
+            background-color: $swing-red;
+        }
     }
 
-    div:hover {
-        background-color: $swing-red;
-        color: white;
+    // mostly for instagram
+    img {
+        width: 100%;
+    }
+}
+
+i {
+    &.material-icons {
+        vertical-align: bottom;
+    }
+
+    &.icon {
+        display: inline-block;
+        width: 1.5em;
+        height: 1.5em;
+        vertical-align: middle;
+        background-color: white;
+
+        &.instagram {
+            mask: url(img/instagram.svg);
+            mask-size: 100%;
+        }
+
+        &.facebook {
+            mask: url(img/fb.svg);
+            mask-size: 100%;
+        }
     }
 }
 // vim: set sw=4 et :
