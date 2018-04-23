@@ -173,16 +173,14 @@ i {
         width: 1.5em;
         height: 1.5em;
         vertical-align: middle;
-        background-color: white;
+        background-size: 100%;
 
         &.instagram {
-            mask: url(img/instagram.svg);
-            mask-size: 100%;
+            background-image: url(img/instagram.svg);
         }
 
         &.facebook {
-            mask: url(img/fb.svg);
-            mask-size: 100%;
+            background-image: url(img/fb.svg);
         }
     }
 }

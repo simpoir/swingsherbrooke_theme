@@ -62,7 +62,7 @@ class NavMenuWalker extends Walker_Nav_Menu {
 			// collapsible + links is shitty UI for touch
 			// thus, we drop the links for parents.
 			$dropdown_id = esc_attr( 'nav-' . $item->ID . '-dropdown' );
-			$item_output .= '<a class="dropdown-button" data-activates="'. $dropdown_id .'" data-belowOrigin="true" data-hover="true">';
+			$item_output .= '<a class="dropdown-button" data-activates="'. $dropdown_id .'" data-belowOrigin="true" data-hover="true" data-constrainWidth="false">';
 			$item_output .= '<i class="right material-icons">expand_more</i>';
 			$item_output .= apply_filters( 'the_title', $item->title, $item->ID );
 			$item_output .= '</a>';
