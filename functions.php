@@ -18,9 +18,9 @@ if ( ! function_exists( 'swingsherbrooke_setup' ) ) :
 	function swingsherbrooke_setup() {
 		/*
 		 * Make theme available for translation.
-		 * Translations can be filed in the /languages/ directory.
+		 * Translations can be filed in the /languages/ directory
 		 * If you're building a theme based on swingsherbrooke, use a find and replace
-		 * to change 'swingsherbrooke' to the name of your theme in all the template files.
+		 * to change 'swingsherbrooke' to the name of your theme in all the template files
 		 */
 		load_theme_textdomain( 'swingsherbrooke', get_template_directory() . '/languages' );
 
@@ -122,6 +122,89 @@ function swingsherbrooke_widgets_init() {
 }
 add_action( 'widgets_init', 'swingsherbrooke_widgets_init' );
 
+class Scheduled_Image extends WP_Widget {
+
+	/** constructor */
+	public function __construct() {
+		parent::__construct(
+			'scheduled-image', // Base ID
+			'Scheduled Image'  // Name
+		);
+		add_action( 'widgets_init', function() {
+			register_widget('Scheduled_Image');
+		});
+	}
+
+	public $args = array(
+		'before_title' => '<h4 class="widgettitle">',
+		'after_title'  => '</h4>',
+		'before_widget' => '<div class="widget-wrap">',
+		'after_widget' => '</div>'
+	);
+
+	/** renders widget */
+	public function widget( $args, $instance ) {
+		$now = date('Y-m-d');
+		$scheduled = get_option('theme_image_schedule');
+		if (empty($scheduled)) {
+			return;
+		}
+		$image = '';
+		$scheduled = json_decode($scheduled, true);
+		foreach ( $scheduled as $schedule ) {
+			if ($now >= $schedule[0]) {
+				$image = $schedule[1];
+			} else {
+				break;
+			}
+		}
+		if (empty($image)) return;
+
+		echo $args['before_widget'];
+		if (!empty($instance['title'])) {
+			echo $args['before_title'];
+			echo apply_filters('widget_title', $instance['title']);
+			echo $args['after_title'];
+		}
+
+		$image_post = get_posts( array(
+			'post_type' => 'attachment',
+			'name' => sanitize_title($image),
+			'posts_per_page' => 1,
+			'post_status' => 'inherit',
+		) );
+		if (! $image_post ) {
+			echo esc_html($image);
+		} else {
+			$image_url = wp_get_attachment_url(array_pop($image_post)->ID);
+			echo '<img src="'.esc_url($image_url).'">';
+		}
+
+		echo $args['after_widget'];
+	}
+
+	/** admin options rendering */
+	public function form( $instance ) {
+		$title = !empty($instance['title'])? $instance['title']: '';
+		?>
+		<p>
+			<label for="<?php echo esc_attr($this->get_field_id('title')); ?>"><?php esc_attr_e('Title:', 'text_domain'); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
+		</p>
+		<?php
+	}
+
+	/** saves options */
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+
+		$instance['title'] = !empty($new_instance['title'])? strip_tags($new_instance['title']): '';
+
+		return $instance;
+	}
+}
+$scheduled_image = new Scheduled_Image();
+
 /**
  * Enqueue scripts and styles.
  */
@@ -192,7 +275,7 @@ function theme_settings_page() {
 <?php
 	settings_fields("section");
 	do_settings_sections("theme-options");
-	submit_button(); 
+	submit_button();
 ?>
 	</form>
 	</div>
@@ -206,12 +289,67 @@ function display_facebook_element() {
 <?php
 }
 
+function display_widgets_options() {
+?>
+	<script>
+function ss_load_data() {
+	var data;
+	try {
+		data = JSON.parse(jQuery('#theme_image_schedule').val());
+	}
+	catch(e) {return;}
+	jQuery.each(data,
+		function(i, e) {
+			ss_addrow(e);
+		});
+}
+function ss_update_data() {
+	var val = jQuery.map(jQuery('#scheduled_image_setting tbody tr'), function(e) {
+		var row = jQuery('input', e);
+		var d = jQuery(row[0]).val();
+		var i = jQuery(row[1]).val();
+		if (d.length && i.length)
+			return [[d, i]];
+	});
+	val.sort();
+	jQuery('#theme_image_schedule').val(JSON.stringify(val));
+}
+function ss_delrow(e) {
+	jQuery(e).parents("tr")[0].remove();
+	ss_update_data();
+}
+function ss_addrow(d) {
+	if (d === undefined) {
+		d = ['', ''];
+	}
+	var newRow = jQuery('<tr><td><input type="date" onblur="ss_update_data()" value="'+d[0]+'"></td><td><input onblur="ss_update_data()" value="'+d[1]+'"></td><td><button type="button" onclick="ss_delrow(this)">-</button></td></tr>');
+	jQuery('#scheduled_image_setting tbody').append(newRow);
+	ss_update_data();
+}
+	</script>
+	<table id="scheduled_image_setting">
+	<thead><tr><th>Date (yyyy-mm-dd)</th><th>nom image</th></td></thead>
+	<tbody></tbody>
+	</table>
+	<button type="button" onclick="ss_addrow()">+</button>
+
+	<br/>
+	<span>debug:</span>
+	<input type="text" name="theme_image_schedule" id="theme_image_schedule" value="<?php echo esc_attr(get_option('theme_image_schedule')); ?>" />
+	<script>ss_load_data();</script>
+<?php
+}
+
 function display_theme_panel_fields() {
 	add_settings_section("section", "All Settings", null, "theme-options");
 
 	add_settings_field("facebook_app_token", "Facebook app token (suitable for graph api queries)", "display_facebook_element", "theme-options", "section");
 
 	register_setting("section", "facebook_app_token");
+
+	add_settings_field("theme_image_schedule", "Widget d'images planifiées",
+		"display_widgets_options", "theme-options", "section");
+	register_setting("section", "theme_image_schedule");
 }
 
 add_action("admin_init", "display_theme_panel_fields");
