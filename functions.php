@@ -289,6 +289,18 @@ function display_facebook_element() {
 <?php
 }
 
+function display_footer_email_options() {
+?>
+	<input type="email" name="theme_contact_email" id="theme_contact_email" value="<?php echo get_option('theme_contact_email'); ?>" />
+<?php
+}
+
+function display_footer_address_options() {
+?>
+	<input type="address" name="theme_contact_address" id="theme_contact_address" value="<?php echo get_option('theme_contact_address'); ?>" />
+<?php
+}
+
 function display_widgets_options() {
 ?>
 	<script>
@@ -346,6 +358,14 @@ function display_theme_panel_fields() {
 	add_settings_field("facebook_app_token", "Facebook app token (suitable for graph api queries)", "display_facebook_element", "theme-options", "section");
 
 	register_setting("section", "facebook_app_token");
+
+	add_settings_field("theme_contact_email", "Courriel du pied de page",
+		"display_footer_email_options", "theme-options", "section");
+	register_setting("section", "theme_contact_email");
+
+	add_settings_field("theme_contact_address", "Adresse du pied de page",
+		"display_footer_address_options", "theme-options", "section");
+	register_setting("section", "theme_contact_address");
 
 	add_settings_field("theme_image_schedule", "Widget d'images planifiées",
 		"display_widgets_options", "theme-options", "section");

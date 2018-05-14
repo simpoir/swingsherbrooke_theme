@@ -134,8 +134,21 @@ h5 {
     }
 }
 
-.site-footer .site-info {
-    color: lightgrey;
+.page-footer {
+    color: white;
+    background-color: black;
+    text-transform: uppercase;
+}
+
+// footer sticks to bottom
+div#page {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+
+    #content {
+        flex: 1 0 auto;
+    }
 }
 
 .simple-calendar {
