@@ -83,6 +83,36 @@ if ( ! function_exists( 'swingsherbrooke_setup' ) ) :
 endif;
 add_action( 'after_setup_theme', 'swingsherbrooke_setup' );
 
+/* Filter for rendering fancy cards template */
+function _render_theme_cards($match) {
+	$result = '';
+	$row_content = 0;
+	preg_match_all('/\\[card ?([^\\]]*)\\]/', $match[1], $card_defs);
+	foreach ($card_defs[1] as $card_def) {
+		preg_match('/name="([^"]*)"/', $card_def, $name);
+		preg_match('/image="([^"]*)"/', $card_def, $image);
+		preg_match('/description="([^"]*)"/', $card_def, $description);
+		$result .= '<div class="col s12 m6 l3"><div class="card"><div class="card-image waves-effect waves-block waves-light">'
+			.'<img class="activator" src="'.$image[1].'"></div>'
+			.'<div class="card-content"><span class="card-title activator grey-text text-darken-4">'
+			.$name[1].'<i class="material-icons right">arrow_drop_down</i></span></div>'
+			.'<div class="card-reveal"><span class="card-title grey-text text-darken-4">'
+			.$name[1].'<i class="material-icons right">close</i></span>'
+			.'<div>'.$description[1].'</div></div></div></div>';
+		$row_content += 1;
+	}
+	return '<div class="row">'.$result.'</div>';
+}
+function filter_content_cards( $content ) {
+	return preg_replace_callback(
+		'/\\[cards\\](.*)\\[cards\\]/s',
+		'_render_theme_cards',
+		$content);
+}
+// prio 5 should be before all quote escaping.
+add_filter( 'the_content', 'filter_content_cards', 5);
+
+
 /**
  * Set the content width in pixels, based on the theme's design and stylesheet.
  *
@@ -118,6 +148,15 @@ function swingsherbrooke_widgets_init() {
 		'after_widget'  => '</section>',
 		'before_title'  => '<h5 class="widget-title">',
 		'after_title'   => '</h5>',
+	) );
+	register_sidebar( array(
+		'name'          => esc_html__( 'sous contenu Accueil', 'swingsherbrooke' ),
+		'id'            => 'home-bottom',
+		'description'   => esc_html__( 'Add widgets here.', 'swingsherbrooke' ),
+		'before_widget' => '<section id="%1$s" class="widget %2$s">',
+		'after_widget'  => '</section>',
+		'before_title'  => '<h4 class="widget-title">',
+		'after_title'   => '</h4>',
 	) );
 }
 add_action( 'widgets_init', 'swingsherbrooke_widgets_init' );

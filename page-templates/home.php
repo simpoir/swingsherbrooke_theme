@@ -24,18 +24,7 @@ get_header(); ?>
 		</div>
 	</div>
 	<div>
-		<h4>Les styles de danse swing</h2>
-		<div class="horiz-scroller center-align">
-			<!-- TODO load from menu -->
-			<div class="box-link item1"><span class="style-name">Lindy hop</span></div>
-			<div class="box-link item2"><span class="style-name">Rockabilly jive</span></div>
-			<div class="box-link item3"><span class="style-name">West coast swing</span></div>
-			<div class="box-link item4"><span class="style-name">Jazz steps solo</span></div>
-			<div class="box-link item5"><span class="style-name">Charleston</span></div>
-			<div class="box-link item6"><span class="style-name">blues</span></div>
-			<div class="box-link item7"><span class="style-name">balboa</span></div>
-			<div class="box-link item8"><span class="style-name">collegiate shag</span></div>
-		</div>
+		<?php dynamic_sidebar('home-bottom'); ?>
 	</div>
 </div>
 

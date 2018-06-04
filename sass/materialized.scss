@@ -140,6 +140,14 @@ h5 {
     text-transform: uppercase;
 }
 
+.separator-above-below {
+    border-top: black dotted;
+    border-bottom: black dotted;
+}
+.separator-above-below + .separator-above-below {
+    border-top: none;
+}
+
 // footer sticks to bottom
 div#page {
     display: flex;
