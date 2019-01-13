@@ -1,6 +1,6 @@
 === swingsherbrooke ===
 
-Contributors: automattic
+Contributors: Simon Poirier
 Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
 
 Requires at least: 4.0
@@ -13,10 +13,14 @@ A starter theme called swingsherbrooke, or underscores.
 
 == Description ==
 
-Hi. I'm a starter theme called swingsherbrooke, or underscores, if you like. I'm a theme meant for hacking so don't use me as a Parent Theme. Instead try turning me into the next, most awesome, WordPress theme out there. That's what I'm here for.
+This is a theme for Swing Sherbrooke based on underscore and using materialized css.
 
 == Installation ==
 
+Before installing, the theme needs to be built. For this you need a nodejs.
+Simply call: make build
+
+Then, 
 1. In your admin panel, go to Appearance > Themes and click the Add New button.
 2. Click Upload Theme and Choose File, then select the theme's .zip file. Click Install Now.
 3. Click Activate to use your new theme right away.
@@ -29,7 +33,7 @@ _s includes support for Infinite Scroll in Jetpack.
 
 == Changelog ==
 
-= 1.0 - May 12 2015 =
+= 1.0 - January 13 2019 =
 * Initial release
 
 == Credits ==
