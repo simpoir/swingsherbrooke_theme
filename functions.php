@@ -187,13 +187,16 @@ class Scheduled_Image extends WP_Widget {
 		$schedule = $instance['schedule'];
 		$images = $instance['images'];
 		$links = $instance['links'];
+		if (empty($schedule)) {
+		 return;
+		}
 		array_multisort($schedule, $images, $links);
 		$image = '';
 		$link = '';
 		for ( $i=0; $i<sizeof($schedule); $i++ ) {
 			if ($now >= $schedule[$i]) {
 				$image = $images[$i];
-				$link = $link[$i];
+				$link = $links[$i];
 			} else {
 				break;
 			}
