@@ -184,20 +184,24 @@ class Scheduled_Image extends WP_Widget {
 	/** renders widget */
 	public function widget( $args, $instance ) {
 		$now = date('Y-m-d');
-		$scheduled = get_option('theme_image_schedule');
-		if (empty($scheduled)) {
-			return;
-		}
+		$schedule = $instance['schedule'];
+		$images = $instance['images'];
+		$links = $instance['links'];
+		array_multisort($schedule, $images, $links);
 		$image = '';
-		$scheduled = json_decode($scheduled, true);
-		foreach ( $scheduled as $schedule ) {
-			if ($now >= $schedule[0]) {
-				$image = $schedule[1];
+		$link = '';
+		for ( $i=0; $i<sizeof($schedule); $i++ ) {
+			if ($now >= $schedule[$i]) {
+				$image = $images[$i];
+				$link = $link[$i];
 			} else {
 				break;
 			}
 		}
-		if (empty($image)) return;
+		if (empty($image)) {
+			echo '?';
+			return;
+		}
 
 		echo $args['before_widget'];
 		if (!empty($instance['title'])) {
@@ -208,7 +212,7 @@ class Scheduled_Image extends WP_Widget {
 
 		$image_post = get_posts( array(
 			'post_type' => 'attachment',
-			'name' => sanitize_title($image),
+			'title' => sanitize_title($image),
 			'posts_per_page' => 1,
 			'post_status' => 'inherit',
 		) );
@@ -216,7 +220,13 @@ class Scheduled_Image extends WP_Widget {
 			echo esc_html($image);
 		} else {
 			$image_url = wp_get_attachment_url(array_pop($image_post)->ID);
+			if (!empty($link)) {
+				echo '<a href="'.esc_url($link).'">';
+			}
 			echo '<img src="'.esc_url($image_url).'">';
+			if (!empty($link)) {
+				echo '</a>';
+			}
 		}
 
 		echo $args['after_widget'];
@@ -225,11 +235,64 @@ class Scheduled_Image extends WP_Widget {
 	/** admin options rendering */
 	public function form( $instance ) {
 		$title = !empty($instance['title'])? $instance['title']: '';
+		$schedule = !empty($instance['schedule'])? $instance['schedule']: [];
+		$images = !empty($instance['images'])? $instance['images']: [];
+		$links = !empty($instance['links'])? $instance['links']: [];
+		$schedule_input = esc_attr($this->get_field_name('schedule')).'[]';
+		$images_input = esc_attr($this->get_field_name('images')).'[]';
+		$links_input = esc_attr($this->get_field_name('links')).'[]';
 		?>
 		<p>
-			<label for="<?php echo esc_attr($this->get_field_id('title')); ?>"><?php esc_attr_e('Title:', 'text_domain'); ?></label>
+			<label for="<?php echo esc_attr($this->get_field_id('title')); ?>">Titre</label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
+		<p>
+			<label>Horaire</label>
+			<table id="<?php echo esc_attr( $this->get_field_id( 'schedule' ) ); ?>_table"
+				data-schedule="<?php echo $schedule_input;?>"
+				data-images="<?php echo $images_input;?>"
+				data-links="<?php echo $links_input;?>"
+			>
+				<thead>
+					<tr><td>Date</td><td>Image</td><td>Lien (opt.)</td><td></td></tr>
+				</thead>
+				<tbody>
+					<?php
+					for ($i = 0; $i < sizeof($schedule); $i++) {
+						echo '<tr>';
+						echo '<td><input type="date" style="widthd:100%" name="'.$schedule_input.'" value="'.esc_attr($schedule[$i]).'"/></td>';
+						echo '<td><input type="text" style="widthd:100%" name="'.$images_input  .'" value="'.esc_attr($images[$i])  .'"/></td>';
+						echo '<td><input type="text" style="widthd:100%" name="'.$links_input   .'" value="'.esc_attr($links[$i])   .'"/></td>';
+						echo '<td><button class="delrow">-</button></tr>';
+					}
+					?>
+				</tbody>
+				<tfoot>
+					<tr><td><button class="addrow">+</button></td></tr>
+				<tfoot>
+		</p>
+		<script type="text/javascript">
+			function ss_delrow(evt) {
+				jQuery(this).parents('tr').remove();
+				return false;
+			}
+			function ss_addrow(evt) {
+				var table = jQuery(this).parents('table');
+				var row = jQuery('<tr>\
+					<td><input type="date" style="widthd:100%" name="'+table.attr('data-schedule')+'"/></td>\
+					<td><input type="text" style="widthd:100%" name="'+table.attr('data-images')+'"/></td>\
+					<td><input type="text" style="widthd:100%" name="'+table.attr('data-links')+'"/></td>\
+					<td><button class="delrow">-</button></td></tr>');
+				row.find('button').on('click', ss_delrow);
+				table.find('tbody').append(row);
+				return false;
+			}
+			function ss_schedule_editor(table) {
+				table.find('button.addrow').on('click', ss_addrow);
+				table.find('button.delrow').on('click', ss_delrow);
+			}
+			ss_schedule_editor(jQuery("#<?php echo esc_attr($this->get_field_id('schedule'))?>_table"));
+		</script>
 		<?php
 	}
 
@@ -237,7 +300,17 @@ class Scheduled_Image extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 
+		$schedule = !empty($new_instance['schedule'])? $new_instance['schedule']: [];
+		$images = !empty($new_instance['images'])? $new_instance['images']: [];
+		$links = !empty($new_instance['links'])? $new_instance['links']: [];
+		if ($new_instance == $old_instance) {
+			array_multisort($schedule, $images, $links);
+		}
+
 		$instance['title'] = !empty($new_instance['title'])? strip_tags($new_instance['title']): '';
+		$instance['schedule'] = $schedule;
+		$instance['images'] = $images;
+		$instance['links'] = $links;
 
 		return $instance;
 	}
@@ -340,57 +413,6 @@ function display_footer_address_options() {
 <?php
 }
 
-function display_widgets_options() {
-?>
-	<script>
-function ss_load_data() {
-	var data;
-	try {
-		data = JSON.parse(jQuery('#theme_image_schedule').val());
-	}
-	catch(e) {return;}
-	jQuery.each(data,
-		function(i, e) {
-			ss_addrow(e);
-		});
-}
-function ss_update_data() {
-	var val = jQuery.map(jQuery('#scheduled_image_setting tbody tr'), function(e) {
-		var row = jQuery('input', e);
-		var d = jQuery(row[0]).val();
-		var i = jQuery(row[1]).val();
-		if (d.length && i.length)
-			return [[d, i]];
-	});
-	val.sort();
-	jQuery('#theme_image_schedule').val(JSON.stringify(val));
-}
-function ss_delrow(e) {
-	jQuery(e).parents("tr")[0].remove();
-	ss_update_data();
-}
-function ss_addrow(d) {
-	if (d === undefined) {
-		d = ['', ''];
-	}
-	var newRow = jQuery('<tr><td><input type="date" onblur="ss_update_data()" value="'+d[0]+'"></td><td><input onblur="ss_update_data()" value="'+d[1]+'"></td><td><button type="button" onclick="ss_delrow(this)">-</button></td></tr>');
-	jQuery('#scheduled_image_setting tbody').append(newRow);
-	ss_update_data();
-}
-	</script>
-	<table id="scheduled_image_setting">
-	<thead><tr><th>Date (yyyy-mm-dd)</th><th>nom image</th></td></thead>
-	<tbody></tbody>
-	</table>
-	<button type="button" onclick="ss_addrow()">+</button>
-
-	<br/>
-	<span>debug:</span>
-	<input type="text" name="theme_image_schedule" id="theme_image_schedule" value="<?php echo esc_attr(get_option('theme_image_schedule')); ?>" />
-	<script>ss_load_data();</script>
-<?php
-}
-
 function display_theme_panel_fields() {
 	add_settings_section("section", "All Settings", null, "theme-options");
 
@@ -405,10 +427,6 @@ function display_theme_panel_fields() {
 	add_settings_field("theme_contact_address", "Adresse du pied de page",
 		"display_footer_address_options", "theme-options", "section");
 	register_setting("section", "theme_contact_address");
-
-	add_settings_field("theme_image_schedule", "Widget d'images planifiées",
-		"display_widgets_options", "theme-options", "section");
-	register_setting("section", "theme_image_schedule");
 }
 
 add_action("admin_init", "display_theme_panel_fields");
