@@ -190,12 +190,12 @@ class Scheduled_Image extends WP_Widget {
 	/** renders widget */
 	public function widget( $args, $instance ) {
 		$instance = wp_parse_args((array)$instance, $this->defaults);
-		$now = date('Y-m-d');
+		$now = (new DateTime('now', new DateTimeZone('America/Toronto')))->format('Y-m-d');
 		$schedule = $instance['schedule'];
 		$images = $instance['images'];
 		$links = $instance['links'];
 		if (empty($schedule)) {
-		 return;
+			return;
 		}
 		array_multisort($schedule, $images, $links);
 		$image = '';
@@ -216,8 +216,8 @@ class Scheduled_Image extends WP_Widget {
 			echo $args['after_title'];
 		}
 		if (empty($image)) {
-		 echo 'à déterminer';
-		 return;
+			echo 'à déterminer';
+			return;
 		}
 
 		$image_post = get_posts( array(
