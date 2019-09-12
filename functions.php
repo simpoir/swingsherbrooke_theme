@@ -169,6 +169,12 @@ class Scheduled_Image extends WP_Widget {
 			'scheduled-image', // Base ID
 			'Scheduled Image'  // Name
 		);
+		$this->defaults = array(
+			'title' => '',
+			'schedule' => [],
+			'links' => [],
+			'images' => [],
+		);
 		add_action( 'widgets_init', function() {
 			register_widget('Scheduled_Image');
 		});
@@ -183,6 +189,7 @@ class Scheduled_Image extends WP_Widget {
 
 	/** renders widget */
 	public function widget( $args, $instance ) {
+		$instance = wp_parse_args((array)$instance, $this->defaults);
 		$now = date('Y-m-d');
 		$schedule = $instance['schedule'];
 		$images = $instance['images'];
@@ -201,16 +208,16 @@ class Scheduled_Image extends WP_Widget {
 				break;
 			}
 		}
-		if (empty($image)) {
-			echo '?';
-			return;
-		}
 
 		echo $args['before_widget'];
 		if (!empty($instance['title'])) {
 			echo $args['before_title'];
 			echo apply_filters('widget_title', $instance['title']);
 			echo $args['after_title'];
+		}
+		if (empty($image)) {
+		 echo 'à déterminer';
+		 return;
 		}
 
 		$image_post = get_posts( array(
@@ -237,10 +244,15 @@ class Scheduled_Image extends WP_Widget {
 
 	/** admin options rendering */
 	public function form( $instance ) {
-		$title = !empty($instance['title'])? $instance['title']: '';
-		$schedule = !empty($instance['schedule'])? $instance['schedule']: [];
-		$images = !empty($instance['images'])? $instance['images']: [];
-		$links = !empty($instance['links'])? $instance['links']: [];
+		if ($this->number == '__i__') {
+			echo '<p>Save and refresh</p>';
+			return;
+		}
+		$instance = wp_parse_args((array)$instance, $this->defaults);
+		$title = $instance['title'];
+		$schedule = $instance['schedule'];
+		$images = $instance['images'];
+		$links = $instance['links'];
 		$schedule_input = esc_attr($this->get_field_name('schedule')).'[]';
 		$images_input = esc_attr($this->get_field_name('images')).'[]';
 		$links_input = esc_attr($this->get_field_name('links')).'[]';
@@ -250,7 +262,6 @@ class Scheduled_Image extends WP_Widget {
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
 		<p>
-			<label>Horaire</label>
 			<table id="<?php echo esc_attr( $this->get_field_id( 'schedule' ) ); ?>_table"
 				data-schedule="<?php echo $schedule_input;?>"
 				data-images="<?php echo $images_input;?>"
