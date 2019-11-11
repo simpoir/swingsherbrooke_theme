@@ -201,10 +201,9 @@ class Scheduled_Image extends WP_Widget {
 		$image = '';
 		$link = '';
 		for ( $i=0; $i<sizeof($schedule); $i++ ) {
-			if ($now >= $schedule[$i]) {
+			if ($now <= $schedule[$i]) {
 				$image = $images[$i];
 				$link = $links[$i];
-			} else {
 				break;
 			}
 		}
