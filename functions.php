@@ -534,3 +534,20 @@ function render_calendar() {
 <?php
 }
 
+// convenient shortcode for adding forms by [swingform name="the_name"]
+function swingform_frame_shortcode($atts) {
+	$a = shortcode_atts(array(
+		'name' => '',
+	), $atts);
+	$name = $a['name'];
+	if (sizeof($name)) {
+		return '
+<iframe id="formframe" style="border: none; width: 100%; height: 1200px" src=""></iframe>
+<script>
+document.getElementById("formframe").src="/cgi-bin/swingforms/f/' . esc_attr($name) . '/?secret="+window.location.hash.substring(1);
+</script>
+';
+	}
+	return 'Missing name. Usage [swingform name=the_form_name]';
+}
+add_shortcode('swingform', 'swingform_frame_shortcode');
