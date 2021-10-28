@@ -540,7 +540,7 @@ function swingform_frame_shortcode($atts) {
 		'name' => '',
 	), $atts);
 	$name = $a['name'];
-	if (sizeof($name)) {
+	if (strlen($name)) {
 		return '
 <iframe id="formframe" style="border: none; width: 100%; height: 1200px" src=""></iframe>
 <script>
